@@ -5,6 +5,7 @@ const $ = window.$;
 export const GET_ERRORS = 'GET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
+export const SET_CURRENT_VISITED_CHATS = 'SET_CURRENT_VISITED_CHATS';
 
 
 
@@ -47,7 +48,6 @@ export const signup = (userData, history) => dispatch => {
 
 // Login - Get User Token
 export const login = userData => dispatch => {
-   
   axios
     .post('/api/users/login', userData)
     .then(res => {
@@ -61,6 +61,7 @@ export const login = userData => dispatch => {
       const decoded = jwt_decode(token);
       // Set current user
       dispatch(setCurrentUser(decoded));
+      // dispatch(updateVisitedChats());
     })
     .catch(err =>
       dispatch({
@@ -70,8 +71,41 @@ export const login = userData => dispatch => {
     );
 };
 
+export const patchChats = userData => dispatch => {
+  return (
+    axios
+      .patch('/api/users/update_chats', userData)
+      .then(res => {
+        dispatch(updateVisitedChats(res.data))
+      })
+      .catch(err => 
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      )
+  )
+}
+
+export const fetchChats = userId => dispatch => {
+  return (
+    axios
+      .get(`/api/users/visited_chat?id=${userId}`)
+      .then(res => {
+        dispatch(updateVisitedChats(res.data))
+      })
+      .catch(err => 
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      )
+  )
+}
+
 // Set logged in user
 export const setCurrentUser = decoded => {
+  // debugger
   return {
     type: SET_CURRENT_USER,
     payload: decoded
@@ -87,3 +121,12 @@ export const logout = () => dispatch => {
   // Set current user to {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
 };
+
+// Update visited chats
+export const updateVisitedChats = (payload) => {
+  return {
+    type: SET_CURRENT_VISITED_CHATS,
+    payload
+  }
+
+}

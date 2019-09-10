@@ -13,7 +13,8 @@ const router = express.Router();
 function userParams(formUser) {
   return {
     email: formUser.body.email,
-    password: formUser.body.password
+    password: formUser.body.password,
+    // vistedChats: formUser.body.visitedChats,
   };
 }
 
@@ -26,7 +27,8 @@ router.get('/', (request, response) => {
 router.get('/current', passport.authenticate('jwt', { session: false }), (request, response) => {
   response.json({ 
     id: request.user.id,
-    email: request.user.email
+    email: request.user.email,
+    // vistedChats: request.user.vistedChats,
   });
 });
 
@@ -57,8 +59,13 @@ router.post("/signup", (req, res) => {
             .then(user => {
               const payload = { id: user.id, name: user.email };
 
+<<<<<<< HEAD
+              jsonwebtoken.sign(payload, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
+              // jsonwebtoken.sign(payload, process.env.secretOrKey, { expiresIn: 3600 }, (err, token) => {
+=======
               // jsonwebtoken.sign(payload, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
               jsonwebtoken.sign(payload, process.env.secretOrKey, { expiresIn: 3600 }, (err, token) => {
+>>>>>>> 08d91bc393a1afb5b3b7ed9ff0c6baa8d09eee01
                 res.json({
                   success: true,
                   token: "Bearer " + token
@@ -90,16 +97,22 @@ router.post('/login', (request, response) => {
 
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
-        const payload = { id: user.id, name: user.email };
+        const payload = { id: user.id, name: user.email, visitedChats: user.visitedChats };
         jsonwebtoken.sign(
           payload,
+<<<<<<< HEAD
+          keys.secretOrKey,
+          // process.env.secretOrKey,
+=======
           // keys.secretOrKey,
           process.env.secretOrKey,
+>>>>>>> 08d91bc393a1afb5b3b7ed9ff0c6baa8d09eee01
           { expiresIn: 3600 },
           (_, token) => {
             response.json({
               success: true,
-              token: `Bearer ${token}`
+              token: `Bearer ${token}`,
+              visited: payload.visitedChats
             });
           });
       } else {
@@ -109,6 +122,37 @@ router.post('/login', (request, response) => {
     });
   });
 });
+
+router.patch('/update_chats', (request, response) => {
+  console.log(request.body);
+  const visitedChats = request.body.visitedChats;
+  const id = request.body.id;
+
+  User.update(
+    { _id: id },
+    { visitedChats: visitedChats }
+    ).exec();
+
+  response.json({
+    visitedChats,
+  })  
+});
+
+router.get('/visited_chat', (request, response) => {
+  const id = request.query.id;
+
+  console.log(request.query)
+  User.findById(id).then(user => {
+    if (!user) {
+      const errorMessage = { email: 'This user does not exist' };
+      return response.status(404).json(errorMessage);
+    }
+    response.json({
+      id: user.id,
+      visitedChats: user.visitedChats
+    })
+  })
+})
 
 
 module.exports = router;

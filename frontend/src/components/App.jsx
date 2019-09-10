@@ -8,8 +8,9 @@ import ChatroomContainer from './chatroom/chatroom_container.js';
 const App = () => (
   <div>
     <Switch>
-      <ProtectedRoute path="/chat" component={ChatroomContainer}/>
-      <ProtectedRoute path="/home" component={GreetingContainer} />
+      <ProtectedRoute exact path="/chat" component={ChatroomContainer}/>
+      <ProtectedRoute exact path="/chat/:id" component={ChatroomContainer}/>
+      <ProtectedRoute exact path="/home" component={GreetingContainer} />
       <AuthRoute path="/" component={SplashContainer} />
     </Switch>
   </div>

@@ -3,7 +3,8 @@
   display: flex;
   flex-direction: column;
   width: 75%;
-  height: 100vh;
+  /* height: 100vh; */
+  height:60%;
   padding: 14px 32px;
   border-left: 1px solid lightgrey;
 }
@@ -12,6 +13,8 @@
   display: flex;
   flex-direction: column-reverse;
   overflow: auto;
+  height: 600px;
+  width: 100%;
   margin-bottom: 12px;
 }
 
@@ -79,6 +82,44 @@
   transition: 0.6s ease;
 }
 
+.chat-index {
+  position: absolute;
+  width: 20%;
+}
+
+#chat-form {
+  position: absolute;
+  bottom: 25px;
+  width: 65%;
+}
+
+.chatrooms {
+  position: relative;
+  left: 20px;
+}
+.chat-category{
+  padding: 10px;
+}
+.chatrooms-header{
+  padding: 5px;
+}
+.chat-link {
+  min-width: 40px;
+
+}
+.chat-link:hover{
+  background: #ccc;
+  width: 100%;
+}
+
+.hidden{
+  display: none;
+}
+.chat-link:hover .hidden {
+  display: inline;
+  float: right;
+  color: white;
+}
 .greeting-header {
  display: flex; 
  justify-content: space-between;
@@ -89,7 +130,7 @@
 
 .greeting-main {
   display: flex;
-  padding-bottom: 50px;
+  /* padding-bottom: 10px; */
 }
 
 .greeting-email {
@@ -115,4 +156,14 @@
 .greeting-button:hover {
   color: #c0c0c0;
   transition: 0.6s ease;
+}
+
+.subscribe-button:hover {
+  background-color: #90EE90;
+}
+.unsubscribe-button:hover {
+  background-color: red;
+}
+.unsubscribe-button, .subscribe-button {
+  height: 40px
 }
